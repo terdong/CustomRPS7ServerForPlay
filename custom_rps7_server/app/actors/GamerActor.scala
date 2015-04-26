@@ -11,7 +11,7 @@ import scala.xml.Utility
 import akka.actor.Terminated
 import play.libs.Akka
 import etc._
-
+import org.msgpack.ScalaMessagePack
 
 class GamerActor(nick: String, uid: String, board: ActorRef, out: ActorRef) extends Actor with ActorLogging {
   override def preStart() = {
@@ -21,6 +21,12 @@ class GamerActor(nick: String, uid: String, board: ActorRef, out: ActorRef) exte
     log.info("postStop " + nick)
   }
   def receive = LoggingReceive {
+    case binary:Array[Byte] =>{
+      
+      val deserialized : Map[String,String] = ScalaMessagePack.read[Map[String,String]](binary)
+      if(deserialized isDefinedAt "compact")
+        println(deserialized("compact"))
+      }
     case item:Int =>board ! Cast(item)
     case str:String => str match {
       case str if str.indexOf('/').equals(0) => board ! Command(nick, uid, str.replace("/",""))

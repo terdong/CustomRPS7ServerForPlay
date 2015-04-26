@@ -10,7 +10,7 @@ case class RespondGetUID(game_room:ActorRef, nick: String, uid: String)
 case class GamerInfo(nick: String, uid: String, gamer_actor: ActorRef)
 
 case class Cast(item: Int)
-case class GamerDetailInfo(rank:Int, Nick:String, Score:Int, item_list:Seq[Int], last_item:Int)
+
 object JoinGameRoom
 object SendTurnInfo
 object RequestReturn

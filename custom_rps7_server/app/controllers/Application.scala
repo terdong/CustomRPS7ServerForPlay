@@ -12,6 +12,12 @@ import play.api.libs.iteratee._
 import actors.GamerActor
 import actors.BoardActor
 
+import play.api.libs.json._
+
+import play.api.mvc.WebSocket.FrameFormatter
+
+
+
 object Application extends Controller {
   val NICK = "nick"
   val UID = "uid"
@@ -25,7 +31,7 @@ object Application extends Controller {
   
 //  def connect(nick: AnyRef) = WebSocket.tryAcceptWithActor[String, String] { implicit request =>
 //  	Future.successful(nick match {
-  def connect = WebSocket.tryAcceptWithActor[String, String] { implicit request =>
+  def connect = WebSocket.tryAcceptWithActor[Array[Byte], String] { implicit request =>
      val uid: String = request.session.get(UID).getOrElse {
       counter += 1
       request.session + (UID -> counter.toString)

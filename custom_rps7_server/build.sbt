@@ -10,5 +10,7 @@ libraryDependencies ++= Seq(
   jdbc,
   anorm,
   cache,
-  ws
+  ws,
+  "org.msgpack" %% "msgpack-scala" % "0.6.11"
 )
+
