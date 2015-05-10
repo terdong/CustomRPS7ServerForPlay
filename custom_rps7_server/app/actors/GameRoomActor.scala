@@ -52,10 +52,10 @@ class GameRoomActor(gamers: Set[GamerInfo]) extends Actor with ActorLogging {
        packet += detail_info.last_item
        if(index < gamers.size - 1){ packet += ";"}    
        index += 1
-       g.gamer_actor ! Notification(packet)
+       g.gamerOutActor ! Notification(packet)
        //packet = ""
      }
-     gamers foreach { _.gamer_actor ! Notification(packet) }
+     gamers foreach { _.gamerOutActor ! Notification(packet) }
     }
     case str: String => log.info(gamers.size.toString())
     case other =>

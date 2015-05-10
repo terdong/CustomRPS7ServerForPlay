@@ -19,22 +19,42 @@ import play.api.libs.json.JsNull
 import play.api.libs.json.JsString
 import play.api.libs.json.JsNumber
 import com.teamgehem.Protobuf.PacketMessage._
+import PacketType._
 
 class GamerActor(nick: String, uid: String, board: ActorRef, out: ActorRef) extends Actor with ActorLogging {
   override def preStart() = {
     board ! Subscribe
-    
-    //val list:Seq[Int] = Seq(1,2,3,4,5)
-    //val protocol:GehemProtocol = GehemProtocol(packetType = PacketType.NONE).withTestList(list)
-    //out ! protocol
-    //log.info("call prestart")
   }
   override def postStop() {
     log.info("postStop " + nick)
   }
+  
+  val myInfo:GamerInfo = GamerInfo(uid, nick, out)
+  
   def receive = LoggingReceive {
+//    case g_protocol: GehemProtocol => {
+//      g_protocol.packetType match {
+//        case OutputChat => out ! g_protocol.toByteArray
+//        case other => {}
+//      }
+//    }
     case binary: Array[Byte] => {
-      val deserialized: Map[String, String] = ScalaMessagePack.read[Map[String, String]](binary)
+      
+      val g_protocol = GehemProtocol.parseFrom(binary);
+      g_protocol.packetType match {
+        case NONE => {}
+        case ConnectionSuccess =>{
+          //out ! g_protocol.update(_.someInt32List :+= 999).toByteArray
+          board ! myInfo
+        } 
+        case InputChat => {
+          board ! g_protocol
+        }
+        
+        case other => {}
+      }
+      
+      /*val deserialized: Map[String, String] = ScalaMessagePack.read[Map[String, String]](binary)
       if (deserialized isDefinedAt "compact") {
         println(deserialized("compact"))
         val json: JsValue = JsObject(Seq(
@@ -52,7 +72,7 @@ class GamerActor(nick: String, uid: String, board: ActorRef, out: ActorRef) exte
         val json_string = Json.toJson(deserialized)
         val serialized: Array[Byte] = ScalaMessagePack.write(json.toString())
         out ! serialized
-      }
+      }*/
     }
     case item: Int => board ! Cast(item)
     case str: String =>

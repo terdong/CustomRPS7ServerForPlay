@@ -8,8 +8,11 @@ import com.trueaccord.scalapb.Descriptors
 
 sealed trait PacketType extends com.trueaccord.scalapb.GeneratedEnum {
   def isNone: Boolean = false
-  def isRequestGetInfo: Boolean = false
+  def isConnectionSuccess: Boolean = false
+  def isInputChat: Boolean = false
+  def isOutputChat: Boolean = false
   def isGoGameScene: Boolean = false
+  def isJson: Boolean = false
 }
 
 object PacketType extends com.trueaccord.scalapb.GeneratedEnumCompanion[PacketType] {
@@ -19,23 +22,44 @@ object PacketType extends com.trueaccord.scalapb.GeneratedEnumCompanion[PacketTy
     override def isNone: Boolean = true
   }
   
-  case object REQUEST_GET_INFO extends PacketType {
+  case object ConnectionSuccess extends PacketType {
     val id = 1
-    val name = "REQUEST_GET_INFO"
-    override def isRequestGetInfo: Boolean = true
+    val name = "ConnectionSuccess"
+    override def isConnectionSuccess: Boolean = true
   }
   
-  case object GO_GAME_SCENE extends PacketType {
+  case object InputChat extends PacketType {
     val id = 2
-    val name = "GO_GAME_SCENE"
+    val name = "InputChat"
+    override def isInputChat: Boolean = true
+  }
+  
+  case object OutputChat extends PacketType {
+    val id = 3
+    val name = "OutputChat"
+    override def isOutputChat: Boolean = true
+  }
+  
+  case object GoGameScene extends PacketType {
+    val id = 4
+    val name = "GoGameScene"
     override def isGoGameScene: Boolean = true
   }
   
-  lazy val values = Seq(NONE, REQUEST_GET_INFO, GO_GAME_SCENE)
+  case object Json extends PacketType {
+    val id = 5
+    val name = "Json"
+    override def isJson: Boolean = true
+  }
+  
+  lazy val values = Seq(NONE, ConnectionSuccess, InputChat, OutputChat, GoGameScene, Json)
   def fromValue(value: Int): PacketType = value match {
     case 0 => NONE
-    case 1 => REQUEST_GET_INFO
-    case 2 => GO_GAME_SCENE
+    case 1 => ConnectionSuccess
+    case 2 => InputChat
+    case 3 => OutputChat
+    case 4 => GoGameScene
+    case 5 => Json
   }
   lazy val descriptor = new Descriptors.EnumDescriptor(0, "PacketType", this)
 }

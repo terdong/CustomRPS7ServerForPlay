@@ -7,7 +7,11 @@ case class Message(nick: String, s: String)
 case class Command(nick: String, uid: String, cmd: String)
 case class RequestGetUID(game_room:ActorRef)
 case class RespondGetUID(game_room:ActorRef, nick: String, uid: String)
-case class GamerInfo(nick: String, uid: String, gamer_actor: ActorRef)
+case class GamerInfo(
+    uid: String, 
+    nick: String, 
+    gamerOutActor: ActorRef
+    )
 
 case class Cast(item: Int)
 
