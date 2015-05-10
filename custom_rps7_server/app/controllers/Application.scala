@@ -11,12 +11,9 @@ import play.api.mvc.WebSocket
 import play.api.libs.iteratee._
 import actors.GamerActor
 import actors.BoardActor
-
 import play.api.libs.json._
-
 import play.api.mvc.WebSocket.FrameFormatter
-
-
+import java.util.UUID
 
 object Application extends Controller {
   val NICK = "nick"
@@ -31,11 +28,12 @@ object Application extends Controller {
   
 //  def connect(nick: AnyRef) = WebSocket.tryAcceptWithActor[String, String] { implicit request =>
 //  	Future.successful(nick match {
-  def connect = WebSocket.tryAcceptWithActor[Array[Byte], String] { implicit request =>
+  def connect = WebSocket.tryAcceptWithActor[Array[Byte], Array[Byte]] { implicit request =>
      val uid: String = request.session.get(UID).getOrElse {
       counter += 1
-      request.session + (UID -> counter.toString)
-      counter.toString
+      val uuid = UUID.randomUUID();
+      request.session + (UID -> uuid.toString())
+      uuid.toString
     }
      println("uid = " + uid)
     Future.successful(request.getQueryString(NICK) match {

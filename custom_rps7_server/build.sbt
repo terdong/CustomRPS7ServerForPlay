@@ -1,3 +1,7 @@
+import com.trueaccord.scalapb.{ScalaPbPlugin => PB}
+
+PB.protobufSettings
+
 name := """custom_rps7_server"""
 
 version := "1.0-SNAPSHOT"
@@ -13,4 +17,3 @@ libraryDependencies ++= Seq(
   ws,
   "org.msgpack" %% "msgpack-scala" % "0.6.11"
 )
-
